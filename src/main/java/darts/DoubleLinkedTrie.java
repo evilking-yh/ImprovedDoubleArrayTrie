@@ -1,0 +1,169 @@
+package darts;
+
+import java.util.List;
+
+import trie.Branch;
+import trie.Forest;
+import trie.WoodInterface;
+
+public class DoubleLinkedTrie {
+	private NodeIntBlock check;
+	private NodeIntBlock base;
+	private NodeBoolBlock used;
+	
+	private int size;
+	private int nextCheckPos;
+	int error_;
+	
+	public DoubleLinkedTrie() {
+		check = new NodeIntBlock();
+		base = new NodeIntBlock();
+		used = new NodeBoolBlock();
+		size = 0;
+		error_ = 0;
+	}
+	
+	public int build(List<String> key){
+		//先构建一颗字典树
+		Forest forest = new Forest();
+		char[] cs = null;
+		for(String line: key){
+			cs = line.toCharArray();
+			
+			int i = 0;
+			WoodInterface tmp = forest;
+			for(char c: cs){
+				if(i++ < cs.length - 1){
+					tmp = tmp.add(new Branch(c,false,null));
+				}else{
+					tmp = tmp.add(new Branch(c,true,null));
+				}
+			}
+		}
+		key = null;		//释放该列表对象，已将数据转移到了forest对象中
+		
+		//通过trie树构建double array trie
+		base.setValue(0, 1);
+		nextCheckPos = 0;
+		
+		buildDoubleArray(forest);
+		
+		used = null;
+		forest = null;	//不需要该trie树，已将数据转移到双数组中
+		
+		return error_;
+	}
+	
+	private int buildDoubleArray(WoodInterface node){
+		if(error_ < 0){
+			return 0;
+		}
+		
+		WoodInterface[] childs = node.getBranchs();	//得到子节点
+		
+		int begin = 0;
+		int pos = ((childs[0].getC() + 1 > nextCheckPos) ? childs[0].getC() + 1 : nextCheckPos) - 1;
+		
+		int nonzero_num = 0;
+		int first = 0;
+		
+		outer: while(true){
+			pos++;
+			
+			if(check.findValue(pos) != 0){
+				nonzero_num++;
+				continue;
+			}else if(first == 0){
+				nextCheckPos = pos;
+				first = 1;
+			}
+			
+			begin = pos - childs[0].getC();
+			if(used.findValue(begin))
+				continue;
+			
+			for(int i = 1;i < childs.length; i++){
+				if(check.findValue(begin + childs[i].getC()) != 0)
+					continue outer;
+			}
+			
+			break;
+		}
+		
+		if(1.0*nonzero_num / (pos - nextCheckPos + 1) >= 0.95)
+			nextCheckPos = pos;
+		
+		used.setValue(begin, true);
+		size = (size > begin + childs[childs.length - 1].getC() + 1) ? size : begin + childs[childs.length - 1].getC() + 1;
+		
+		for(int i = 0; i < childs.length; i++){
+			check.setValue(begin + childs[i].getC(), begin);
+		}
+		
+		for(int i = 0;i < childs.length; i++){
+			if(childs[i].getChildCount() == 0){		//到达叶子节点
+				base.setValue(begin + childs[i].getC(), -1);	//将模式结尾标记为负
+			}else{
+				int h = buildDoubleArray(childs[i]);
+				base.setValue(begin + childs[i].getC(), h);
+			}
+		}
+		
+		return begin;
+	}
+	
+	//模式匹配单个字符串
+	public int exactMatchSearch(String key) {
+		return exactMatchSearch(key, 0, 0, 0);
+	}
+
+	public int exactMatchSearch(String key, int pos, int len, int nodePos) {
+		if (len <= 0)
+			len = key.length();
+		if (nodePos <= 0)
+			nodePos = 0;
+
+		int result = -1;
+
+		char[] keyChars = key.toCharArray();
+
+		int b = base.findValue(nodePos);	//起始位置
+		int p;
+
+		for (int i = pos; i < len; i++) {	//从最开始的字符，依次状态转换到最后
+			p = b + (int) (keyChars[i]) + 1;
+			if(b == check.findValue(p)){
+				b = base.findValue(p);
+			}else{
+				return result;	//中途状态转移不成功，退出
+			}
+		}
+
+		p = b;	//转换成功
+		int n = base.findValue(p);
+		if(b == check.findValue(p) && n < 0){
+			result = -n - 1;	//字符索引
+		}
+		return result;
+	} 
+	
+	void clear() {
+		check = new NodeIntBlock();
+		base = new NodeIntBlock();
+		used = new NodeBoolBlock();
+		size = 0;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public int getNonzeroSize() {
+		int result = 0;
+		for (int i = 0; i < size; i++)
+			if(check.findValue(i) != 0)
+				result++;
+		return result;
+	}
+	
+}
