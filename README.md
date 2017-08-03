@@ -1,0 +1,2 @@
+# ImprovedDoubleArrayTrie
+这是针对大数据集优化了的双数组字典树，但是有个bug
