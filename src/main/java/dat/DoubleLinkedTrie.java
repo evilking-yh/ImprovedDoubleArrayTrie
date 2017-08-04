@@ -35,7 +35,7 @@ public class DoubleLinkedTrie {
 			for(char c: cs){
 				tmp = tmp.add(new Branch(c,false,null));
 			}
-			tmp.add(new Branch('\0',true,null));
+			tmp.add(new Branch('\000',true,null));    //结尾的空子节点
 		}
 		key = null;		//释放该列表对象，已将数据转移到了forest对象中
 		
