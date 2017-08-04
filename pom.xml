@@ -2,12 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>darts</groupId>
-  <artifactId>darts-java</artifactId>
+  <groupId>ImprovedDoubleArrayTrie</groupId>
+  <artifactId>ImprovedDoubleArrayTrie-java</artifactId>
   <version>0.32.1</version>
   <packaging>jar</packaging>
 
-  <name>darts-java</name>
+  <name>ImprovedDoubleArrayTrie-java</name>
   <url>http://maven.apache.org</url>
 
   <properties>
