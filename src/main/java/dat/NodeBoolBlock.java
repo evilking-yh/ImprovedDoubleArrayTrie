@@ -1,22 +1,22 @@
-package darts;
+package dat;
 
-public class NodeIntBlock {
+public class NodeBoolBlock {
 	private static final int BLOCK_SIZE = 200;	//数组块的大小
 	
-	private int[] value;	//保存的数组实际内容		[0,BLOCK_SIZE - 1]
+	private boolean[] value;	//保存的数组实际内容		[0,BLOCK_SIZE - 1]
 	private int left;		//数组块的左边界		[left,right]
 	private int right;		//数组块的右边界
-	private NodeIntBlock next;	//数组块的下一个指针
+	private NodeBoolBlock next;	//数组块的下一个指针
 	
 	
-	public NodeIntBlock(){
-		this.value = new int[BLOCK_SIZE];
+	public NodeBoolBlock(){
+		this.value = new boolean[BLOCK_SIZE];
 		this.left = 0;
 		this.right = left + BLOCK_SIZE - 1;
 	}
 	
-	public NodeIntBlock(int left){
-		this.value = new int[BLOCK_SIZE];
+	public NodeBoolBlock(int left){
+		this.value = new boolean[BLOCK_SIZE];
 		this.left = left;
 		this.right = left + BLOCK_SIZE - 1;
 	}
@@ -26,26 +26,21 @@ public class NodeIntBlock {
 	 * @param index
 	 * @return
 	 */
-	public int findValue(int index){
+	public boolean findValue(int index){
 		if(index >= left && index <= right){
 			return value[index - left];
 		}else if(next == null && index > right){
-			return 0;	//代表还未被创建的节点，对应的值当然为0了
+			return false;	//代表还未被创建的节点，对应的值当然为0了
 		}else{
 			return next.findValue(index);
 		}
 	}
 	
-	/**
-	 * 设置index指向的值
-	 * @param index
-	 * @param val
-	 */
-	public void setValue(int index, int val){
+	public void setValue(int index, boolean val){
 		if(index >= left && index <= right){
 			value[index - left] = val;
 		}else if(next == null && index > right) {
-			next = new NodeIntBlock(right + 1);	//自动创建下一个数组块
+			next = new NodeBoolBlock(right + 1);
 			next.setValue(index, val);
 		}else{
 			next.setValue(index,val);

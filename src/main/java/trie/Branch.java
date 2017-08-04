@@ -105,7 +105,7 @@ public class Branch implements WoodInterface {
 	}
 
 	public int getChildCount() {
-		return this.branches.length;
+		return (this.branches == null) ? 0 : this.branches.length;
 	}
 
 	public boolean getStatus() {

@@ -1,4 +1,4 @@
-package com.hankcs.test.trie;
+package com.unknown.test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import darts.DoubleArrayTrie;
+import dat.DoubleArrayTrie;
 
 public class Main
 {

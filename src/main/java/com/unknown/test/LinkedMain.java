@@ -1,4 +1,4 @@
-package com.hankcs.test.trie;
+package com.unknown.test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -7,9 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import darts.DoubleLinkedTrie;
+import dat.DoubleLinkedArrayTrie;
 
-public class TrieLinkedMain {
+public class LinkedMain {
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader reader = new BufferedReader(new FileReader("small.dict"));
@@ -22,15 +22,21 @@ public class TrieLinkedMain {
         }
         reader.close();
  
-        DoubleLinkedTrie dat = new DoubleLinkedTrie();
+        DoubleLinkedArrayTrie dat = new DoubleLinkedArrayTrie();
         System.out.println("是否错误: " + dat.build(words));
         System.out.println(dat);
         
-        int index = dat.exactMatchSearch("一举成名天下知");
-        System.out.println(index);
-        if(index > 0){
-        	System.out.println("========");
+        List<String> searchList = dat.commonPrefixSearchList("一举成和天下知万能胶还有一部分是万能");
+        for(String str: searchList){
+        	System.out.println(str);
         }
+        
+//        System.out.println("==============");
+//        
+//        List<Integer> indexList = dat.commonPrefixSearch("一举成和天下知还有一部分是万能");
+//        for(Integer index: indexList){
+//        	System.out.println(words.get(index));
+//        }
 	}
 
 }

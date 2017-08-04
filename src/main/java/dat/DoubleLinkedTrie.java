@@ -1,5 +1,6 @@
-package darts;
+package dat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import trie.Branch;
@@ -30,15 +31,11 @@ public class DoubleLinkedTrie {
 		for(String line: key){
 			cs = line.toCharArray();
 			
-			int i = 0;
 			WoodInterface tmp = forest;
 			for(char c: cs){
-				if(i++ < cs.length - 1){
-					tmp = tmp.add(new Branch(c,false,null));
-				}else{
-					tmp = tmp.add(new Branch(c,true,null));
-				}
+				tmp = tmp.add(new Branch(c,false,null));
 			}
+			tmp.add(new Branch('\0',true,null));
 		}
 		key = null;		//释放该列表对象，已将数据转移到了forest对象中
 		
@@ -131,7 +128,8 @@ public class DoubleLinkedTrie {
 		int p;
 
 		for (int i = pos; i < len; i++) {	//从最开始的字符，依次状态转换到最后
-			p = b + (int) (keyChars[i]) + 1;
+//			p = b + (int) (keyChars[i]) + 1;
+			p = b + (int) (keyChars[i]);
 			if(b == check.findValue(p)){
 				b = base.findValue(p);
 			}else{
@@ -146,6 +144,108 @@ public class DoubleLinkedTrie {
 		}
 		return result;
 	} 
+
+	public List<Integer> commonPrefixSearch(String key) {
+		return commonPrefixSearch(key, 0, 0, 0);
+	}
+
+	public List<Integer> commonPrefixSearch(String key, int pos, int len,
+			int nodePos) {
+		if (len <= 0)
+			len = key.length();
+		if (nodePos <= 0)
+			nodePos = 0;
+
+		List<Integer> result = new ArrayList<Integer>();
+
+		char[] keyChars = key.toCharArray();
+
+		int b = base.findValue(nodePos);
+		int n;
+		int p;
+
+		for (int i = pos; i < len; i++) {
+			p = b;
+			n = base.findValue(p);
+
+			if(b == check.findValue(p) && n < 0){
+				result.add(-n - 1);
+			}
+
+//			p = b + (int) (keyChars[i]) + 1;
+			p = b + (int) (keyChars[i]);
+			if(b == check.findValue(p)){
+				b = base.findValue(p);
+			}else{
+				return result;
+			}
+		}
+
+		p = b;
+		n = base.findValue(p);
+
+		if(b == check.findValue(p) && n < 0){
+			result.add(-n - 1);
+		}
+
+		return result;
+	}
+
+	public List<String> commonPrefixSearchList(String content){
+		List<String> matchList = new ArrayList<String>();
+		
+		int len = content.length();
+		int nodePos = 0;
+
+		char[] keyChars = content.toCharArray();
+
+		String ansStr = "";
+		String tmpStr = "";
+		int n;
+		int p;
+		int b;
+		int kk = -1;	//保存中间匹配索引
+		for(int ii = 0; ii < len; ii++){
+			b = base.findValue(nodePos);
+
+			int i = ii;
+			for (; i < len; i++) {
+				p = b;
+				n = base.findValue(p);
+
+				if (b == check.findValue(p) && n < 0) {
+					kk = i;
+					tmpStr = ansStr;
+				}
+
+//				p = b + (int) (keyChars[i]) + 1;
+				p = b + (int) (keyChars[i]);
+				if (b == check.findValue(p)) {
+					b = base.findValue(p);
+				} else {
+					break;
+				}
+				
+				ansStr += keyChars[i];
+			}
+
+			p = b;
+			n = base.findValue(p);
+
+			if (n < 0 && b == check.findValue(p)) {
+				ii = i - 1;		//最后匹配到了，就从最后索引开始进行下一轮匹配
+				matchList.add(ansStr);
+			}else if(kk > 0){	//说明中间有部分匹配成功
+				ii = kk - 1;	//最后没有匹配成功，但是中间有部分匹配成功了，就从最大匹配成功索引开始进行下一轮匹配
+				matchList.add(tmpStr);
+			}
+			kk = -1;	//还原
+			tmpStr = "";
+			ansStr = "";
+		}
+		
+		return matchList;
+	}
 	
 	void clear() {
 		check = new NodeIntBlock();

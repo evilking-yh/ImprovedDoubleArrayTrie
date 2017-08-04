@@ -13,7 +13,7 @@
  * License (the "BSD").
  * </p>
  */
-package darts;
+package dat;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -81,9 +81,7 @@ public class DoubleArrayTrie {
 		for (int i = parent.left; i < parent.right; i++) {
 			if ((length != null ? length[i] : key.get(i).length()) < parent.depth)
 				continue;
-
 			String tmp = key.get(i);	//第i行输入字符串
-
 			int cur = 0;	//当前字符的unicode码+1，即下一个非空位
 			if ((length != null ? length[i] : tmp.length()) != parent.depth)
 				cur = (int) tmp.charAt(parent.depth) + 1;	//按层添加
@@ -100,10 +98,8 @@ public class DoubleArrayTrie {
 				tmp_node.left = i;
 				if (siblings.size() != 0)
 					siblings.get(siblings.size() - 1).right = i;	//左兄弟节点的右边界更新为当前节点的左边界
-
 				siblings.add(tmp_node);
 			}
-
 			prev = cur;
 		}
 

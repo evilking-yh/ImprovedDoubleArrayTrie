@@ -21,7 +21,6 @@ public class Forest implements WoodInterface {
 
 	public WoodInterface get(char c) {
 		if (c > 66535) {
-//			System.out.println(c);
 			return null;
 		}
 		return this.chars[c];
@@ -82,9 +81,7 @@ public class Forest implements WoodInterface {
 			}
 		}
 		WoodInterface[] chars2 = new WoodInterface[tmpList.size()];
-		for(int i = 0;i < tmpList.size(); i++){
-			chars2[i] = tmpList.get(i);
-		}
+		tmpList.toArray(chars2);
 		return chars2;
 	}
 }

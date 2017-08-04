@@ -13,7 +13,7 @@
  * License (the "BSD").
  * </p>
  */
-package darts;
+package dat;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
