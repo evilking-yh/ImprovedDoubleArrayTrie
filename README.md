@@ -90,6 +90,23 @@ darts.DoubleLinkedTrie@15db9742
 
 希望大神们能帮忙看看，实在无能为力了。。。。。。
 
+## 问题的解决
 
+经过我司一架构师分析，原来是双数组字典树这里需要构建的字典树与普通的稍微有点区别，就是叶子节点不是字符串的最后一个字符，而是在最后一个字符后额外增加了个空的叶子节点
+```java
+Forest forest = new Forest();
+		char[] cs = null;
+		for(String line: key){
+			cs = line.toCharArray();
+			
+			WoodInterface tmp = forest;
+			for(char c: cs){
+				tmp = tmp.add(new Branch(c,false,null));
+			}
+			tmp.add(new Branch('\0',true,null));    //最后的空叶子节点
+		}
+		key = null;
+```
+其他地方都没什么问题了，感谢大神^_^
 
 
