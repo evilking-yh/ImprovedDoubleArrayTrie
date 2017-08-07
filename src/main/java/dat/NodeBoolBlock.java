@@ -1,7 +1,7 @@
 package dat;
 
 public class NodeBoolBlock {
-	private static final int BLOCK_SIZE = 200;	//数组块的大小
+	private static final int BLOCK_SIZE = 10000;	//数组块的大小，可根据数据量来调节该参数，数据量大，则参数应设置大一点，构建速度会提高很多
 	
 	private boolean[] value;	//保存的数组实际内容		[0,BLOCK_SIZE - 1]
 	private int left;		//数组块的左边界		[left,right]
