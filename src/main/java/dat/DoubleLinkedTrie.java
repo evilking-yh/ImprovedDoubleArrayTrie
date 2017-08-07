@@ -2,6 +2,7 @@ package dat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import trie.Branch;
 import trie.Forest;
@@ -15,6 +16,8 @@ public class DoubleLinkedTrie {
 	private int size;
 	private int nextCheckPos;
 	int error_;
+	
+	private Random random = new Random();
 	
 	public DoubleLinkedTrie() {
 		check = new NodeIntBlock();
@@ -69,6 +72,9 @@ public class DoubleLinkedTrie {
 			
 			if(check.findValue(pos) != 0){
 				nonzero_num++;
+				
+				pos = (random.nextFloat() < 0.6) ? pos + 1 : pos + 2;  //第一次就冲突，说明数组比较密集了
+				
 				continue;
 			}else if(first == 0){
 				nextCheckPos = pos;
@@ -76,19 +82,26 @@ public class DoubleLinkedTrie {
 			}
 			
 			begin = pos - childs[0].getC();
-			if(used.findValue(begin))
+			if(used.findValue(begin)){
+				pos = (random.nextFloat() < 0.6) ? pos + 1 : pos + 2;
+				
 				continue;
+			}
 			
 			for(int i = 1;i < childs.length; i++){
-				if(check.findValue(begin + childs[i].getC()) != 0)
+				if(check.findValue(begin + childs[i].getC()) != 0){
+					pos = (random.nextFloat() < 0.6) ? pos : pos + 1;  //其他子兄弟节点冲突，说明数组有点密集
+					
 					continue outer;
+				}
 			}
 			
 			break;
 		}
 		
+		//此为冲突率，冲突率调大一点，则数组密集一点，占用内存就少一些；冲突率调小一点，则数组稀疏一些，构建快一点，但是占用内存多一些
 		if(1.0*nonzero_num / (pos - nextCheckPos + 1) >= 0.95)
-			nextCheckPos = pos;
+			nextCheckPos = pos;    //更新下一个开始检查点，可以跳过前面一段密集区域
 		
 		used.setValue(begin, true);
 		size = (size > begin + childs[childs.length - 1].getC() + 1) ? size : begin + childs[childs.length - 1].getC() + 1;
