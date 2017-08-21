@@ -1,6 +1,8 @@
 # ImprovedDoubleArrayTrie
 这是针对大数据集优化了的双数组字典树，使得在大数据集上构建速度也比较满意，查询速度不随数据集的增加而增加，同时解决了数据集需要有序的要求.
 
+关于双数组字典树的具体讲解，可参考 [introduce](https://github.com/evilKing/ImprovedDoubleArrayTrie/edit/master/INTRODUCE.md)
+
 ## 说明
 
 这是基于开源实现 https://github.com/komiya-atsushi/darts-java 来修改的双数组字典树的实现.
