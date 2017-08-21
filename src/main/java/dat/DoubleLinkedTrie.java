@@ -32,6 +32,9 @@ public class DoubleLinkedTrie {
 		Forest forest = new Forest();
 		char[] cs = null;
 		for(String line: key){
+			if(line.trim().length() == 0){	//当数据集中有空行时，匹配的时候会发生死循环
+				continue;
+			}
 			cs = line.toCharArray();
 			
 			WoodInterface tmp = forest;
